@@ -29,13 +29,13 @@ Shader "Hidden/FullScreenTriangle"
             {
                 Varyings o;
                 o.positionCS = float4(i.positionOS, 0, 1);
-                o.uv = i.positionOS * half2(0.5, -0.5) + 0.5;
+                o.uv = i.positionOS * half2(0.5, -0.5) + half2(0.5, 0.5);
                 return o;
             }
 
             half4 Fragment(Varyings i) : SV_Target
             {
-                return SAMPLE_TEXTURE2D(_Tex, sampler_Tex, i.uv);;
+                return SAMPLE_TEXTURE2D(_Tex, sampler_Tex, i.uv);
             }
             ENDHLSL
         }
