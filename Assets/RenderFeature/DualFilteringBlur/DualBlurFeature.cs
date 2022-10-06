@@ -1,27 +1,41 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
+
+
+public enum RenderTarget
+{
+    frameBuffer,
+    glabalTexture
+}
 
 public class DualBlurFeature : ScriptableRendererFeature
 {
     [System.Serializable]
-    public class KawaseBlurSettings
+    public class DualBlurSettings
     {
+        public RenderTarget renderTarget = RenderTarget.frameBuffer;
         public RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
         public Material blurMaterial = null;
         [Range(0, 5)]
         public int downsample = 1;
+        public string globalTextureName = "_BlurTexture";
     }
 
-    public KawaseBlurSettings settings = new KawaseBlurSettings();
+    public DualBlurSettings settings = new DualBlurSettings();
         
     DualBlurPass pass;
 
     public override void Create()
     {
-        pass = new DualBlurPass("DualBlur");
-        pass.blurMaterial = settings.blurMaterial;
-        pass.downsample = settings.downsample;
-        pass.renderPassEvent = settings.renderPassEvent;
+        pass = new DualBlurPass("DualBlur")
+        {
+            blurMaterial = settings.blurMaterial,
+            downsample = settings.downsample,
+            renderPassEvent = settings.renderPassEvent,
+            target = settings.renderTarget,
+            globalTexID = Shader.PropertyToID(settings.globalTextureName)
+        };
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
