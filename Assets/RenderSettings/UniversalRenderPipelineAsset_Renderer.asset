@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7985530130319945644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb34854f8a21b5242ba9dd8bb3377c9b, type: 3}
+  m_Name: CustomBlitFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &-2009492793078614248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,11 +25,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344f558f44c3d3b47beebb1c47598e69, type: 3}
   m_Name: DualBlurFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
+    renderTarget: 0
     renderPassEvent: 500
     blurMaterial: {fileID: 2100000, guid: 417f478eaa01bec4ca08b3853f9430e3, type: 2}
-    downsample: 0
+    downsample: 5
+    globalTextureName: _BlurTexture
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,13 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
   m_Name: UniversalRenderPipelineAsset_Renderer
   m_EditorClassIdentifier: 
-  debugShaders:
-    debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
   m_RendererFeatures:
   - {fileID: 5954460901080245662}
   - {fileID: -2009492793078614248}
-  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce4
-  m_UseNativeRenderPass: 0
+  - {fileID: -7985530130319945644}
+  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d91
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -43,14 +56,11 @@ MonoBehaviour:
     copyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
     screenSpaceShadowPS: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd, type: 3}
     samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    tileDepthInfoPS: {fileID: 0}
+    tileDeferredPS: {fileID: 0}
     stencilDeferredPS: {fileID: 4800000, guid: e9155b26e1bc55942a41e518703fe304, type: 3}
     fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
     materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
-    coreBlitPS: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
-    coreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b, type: 3}
-    cameraMotionVector: {fileID: 4800000, guid: c56b7e0d4c7cb484e959caeeedae9bbf, type: 3}
-    objectMotionVector: {fileID: 4800000, guid: 7b3ede40266cd49a395def176e1bc486, type: 3}
-  m_AssetVersion: 1
   m_OpaqueLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -66,11 +76,24 @@ MonoBehaviour:
     zFailOperation: 0
   m_ShadowTransparentReceive: 0
   m_RenderingMode: 0
-  m_DepthPrimingMode: 0
   m_AccurateGbufferNormals: 0
-  m_ClusteredRendering: 0
-  m_TileSize: 32
-  m_IntermediateTextureMode: 1
+--- !u!114 &5510697784215195006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330ae4b9c4f390949b67e3645744c630, type: 3}
+  m_Name: NewCustomBlitFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  tex: {fileID: 8400000, guid: dcc2b56227d2e1640b4c46697ebcbfa9, type: 2}
+  texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 3}
+  passEvent: 500
+  _material: {fileID: 0}
 --- !u!114 &5954460901080245662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,5 +107,5 @@ MonoBehaviour:
   m_Name: FullScreenTriangle
   m_EditorClassIdentifier: 
   m_Active: 0
-  texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+  texture: {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
   passEvent: 600
