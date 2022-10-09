@@ -29,7 +29,10 @@ Shader "Hidden/FullScreenTriangle"
             {
                 Varyings o;
                 o.positionCS = float4(i.positionOS, 0, 1);
-                o.uv = i.positionOS * half2(0.5, -0.5) + half2(0.5, 0.5);
+                #if UNITY_UV_STARTS_AT_TOP
+			        o.positionCS.y *= -1;
+		        #endif
+                o.uv = i.positionOS * half2(0.5, 0.5) + half2(0.5, 0.5);
                 return o;
             }
 
