@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 public enum RenderTarget
 {
     frameBuffer,
-    glabalTexture
+    globalTexture
 }
 
 public class DualBlurFeature : ScriptableRendererFeature

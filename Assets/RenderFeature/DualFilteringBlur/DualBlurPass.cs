@@ -40,6 +40,8 @@ class DualBlurPass : ScriptableRenderPass
         var cmd = CommandBufferPool.Get(profilerTag);
 
         MaxIterations = downsample;
+        if(MaxIterations == 0)
+            return;
 
         var width = renderingData.cameraData.cameraTargetDescriptor.width;
         var height = renderingData.cameraData.cameraTargetDescriptor.height;
@@ -70,7 +72,7 @@ class DualBlurPass : ScriptableRenderPass
             case RenderTarget.frameBuffer:
                 cmd.Blit(last, renderingData.cameraData.renderer.cameraColorTarget);
             break;
-            case RenderTarget.glabalTexture:
+            case RenderTarget.globalTexture:
                 cmd.SetGlobalTexture(globalTexID, last);
             break;
             default:

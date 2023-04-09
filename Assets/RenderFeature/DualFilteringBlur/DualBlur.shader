@@ -51,7 +51,9 @@
             {
                 v2f o;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
+
                 o.vertex = vertexInput.positionCS;
+
                 float4 offset = _MainTex_TexelSize.xyxy*float4(-1,-1,1,1);
                 o.uv0 = v.uv;
                 o.uv1 = v.uv + offset.xy;
@@ -118,6 +120,7 @@
                 v2f o;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
                 o.vertex = vertexInput.positionCS;
+
                 float4 offset = _MainTex_TexelSize.xyxy*float4(-1,-1,1,1);
                 o.uv0 = v.uv + float2(offset.x, 0);
                 o.uv1 = v.uv + float2(offset.z, 0);

@@ -6,9 +6,9 @@ using UnityEngine.Rendering.Universal;
 class CustomBlitPass : ScriptableRenderPass
 {
 	private ProfilingSampler _profilingSampler = new ProfilingSampler("CustomBlit");
-	private Material _material;
+	private readonly Material _material;
 	private RenderTargetIdentifier _cameraColorTarget;
-	private Mesh _triangle;
+	private readonly Mesh _triangle;
 
 	public CustomBlitPass(Material material)
 	{
@@ -28,10 +28,13 @@ class CustomBlitPass : ScriptableRenderPass
 		saturationDescriptor.depthBufferBits = 0;
 	}
 
-	private void Blit(CommandBuffer cmd,RenderTargetIdentifier target, Material material, int pass)
+	private void Blit(CommandBuffer cmd, RenderTargetIdentifier target, Material material, int pass)
 	{
-		cmd.SetRenderTarget(target);
+		// For default processing _CameraOpaqueTexture.
+		// For custom texture set in material.SetTexture("_MainTex", sourceTexture).
+
 		cmd.DrawMesh(_triangle, Matrix4x4.identity, material, 0, pass);
+		cmd.SetRenderTarget(target);
 	}
 
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
