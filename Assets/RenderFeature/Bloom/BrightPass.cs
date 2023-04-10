@@ -24,11 +24,14 @@ public class BrightPass : ScriptableRenderPass
         var drawingSettings = CreateDrawingSettings(_shaderTagIdList, ref renderingData, sortingCriteria);
         cmd.GetTemporaryRT(_destination.id, renderingData.cameraData.cameraTargetDescriptor);
 
+#if UNITY_2022_1_OR_NEWER
+			// URP 13 (Unity 2022.1+) has non-documented breaking changes related to _CameraDepthTexture. Reflection is used here to retrieve _CameraDepthTexture's underlying depth texture, as suggested by the "How to set _CameraDepthTexture as render target in URP 13?" forum, see https://forum.unity.com/threads/how-to-set-_cameradepthtexture-as-render-target-in-urp-13.1279934/#post-8272821
+        var depthTextureHandle = depthTextureFieldInfo.GetValue(camData.renderer) as RTHandle;
+#else
         var depthTexture = new RenderTargetIdentifier("_CameraDepthTexture");
-
+#endif
+      
         cmd.SetRenderTarget(_destination.Identifier(), RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, depthTexture, RenderBufferLoadAction.Load, RenderBufferStoreAction.DontCare);
-        //cmd.SetRenderTarget(_destination.id);
-        //cmd.SetRenderTarget(_destination.Identifier(), depthTexture);
         cmd.ClearRenderTarget(false, true, Color.clear);
         cmd.SetGlobalTexture(_destination.id, _destination.Identifier());
         context.ExecuteCommandBuffer(cmd);

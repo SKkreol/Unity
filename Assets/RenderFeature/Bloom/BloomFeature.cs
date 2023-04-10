@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Serialization;
 
 namespace RenderFeature.Bloom
 {
@@ -63,8 +62,7 @@ namespace RenderFeature.Bloom
     
       _blurPass.Setup(_renderTexture.Identifier());
       _blurPass.renderPassEvent = passEvent;
-
-    
+      
       renderer.EnqueuePass(_bloomPass);
       renderer.EnqueuePass(_brightPass); 
       renderer.EnqueuePass(_blurPass);

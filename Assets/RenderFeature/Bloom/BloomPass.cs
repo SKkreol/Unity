@@ -55,6 +55,9 @@ public class BloomPass : ScriptableRenderPass
 
     var count = 0;
 
+    var dxCount = 1f / _xCount;
+    var dyCount = 1f / _yCount;
+    
     for (var y = 0; y < _yCount; y++)
     {
       for (var x = 0; x < _xCount; x++)
@@ -62,7 +65,9 @@ public class BloomPass : ScriptableRenderPass
         p2.x = p1.x + xSize;
         p3.x = p0.x + xSize;
 
-        var uvOffset = new Vector2((1f / _xCount) * x, (1f / _yCount) * y);
+        // Baked position in range 0...1
+        var bakedPosition = new Vector2(dxCount * x, dyCount * y);
+        
         var quad = new Mesh
         {
           vertices = new[]
@@ -74,10 +79,10 @@ public class BloomPass : ScriptableRenderPass
           },
           uv = new[]
           {
-            uvOffset,
-            uvOffset,
-            uvOffset,
-            uvOffset
+            bakedPosition,
+            bakedPosition,
+            bakedPosition,
+            bakedPosition
           },
 
           triangles = tris,
@@ -120,7 +125,9 @@ public class BloomPass : ScriptableRenderPass
   {
     if (_quads == null)
       _quads = FullScreenQuads();
-    Material.SetVector(QuadsOffSetID, new Vector4(0.5f / _xCount, 0.5f / _yCount, 1.0f / _xCount, 1.0f / _yCount));
+    
+    var quadsOffSet = new Vector4(0.5f / _xCount, 0.5f / _yCount, 1.0f / _xCount, 1.0f / _yCount);
+    Material.SetVector(QuadsOffSetID, quadsOffSet);
   }
 
   public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
