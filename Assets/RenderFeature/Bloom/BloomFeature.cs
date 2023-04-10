@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 namespace RenderFeature.Bloom
 {
@@ -8,8 +9,8 @@ namespace RenderFeature.Bloom
     [SerializeField] private bool debug;
     [SerializeField] 
     private RenderPassEvent passEvent = RenderPassEvent.AfterRenderingTransparents;
-    public LayerMask GlowLayers;
-    public string _renderTextureName = "_BrightTex";
+    public LayerMask glowLayers;
+    public string renderTextureName = "_BrightTex";
     public RenderTarget renderTarget = RenderTarget.frameBuffer;
     public Material blurMaterial = null;
     [Range(0, 5)]
@@ -27,9 +28,9 @@ namespace RenderFeature.Bloom
     private const string MaskDebugFeature = "_MASK_DEBUG_ON";
     public override void Create()
     {
-      _renderTexture.Init(_renderTextureName);
+      _renderTexture.Init(renderTextureName);
 
-      _brightPass = new BrightPass(_renderTexture, GlowLayers);
+      _brightPass = new BrightPass(_renderTexture, glowLayers);
       
       _blurPass = new DualBlurPass("DualBlur")
       {
