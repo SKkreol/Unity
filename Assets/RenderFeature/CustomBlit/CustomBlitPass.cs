@@ -22,12 +22,6 @@ class CustomBlitPass : ScriptableRenderPass
 		_cameraColorTarget = cameraColorTarget;
 	}
 
-	public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
-	{
-		var saturationDescriptor = renderingData.cameraData.cameraTargetDescriptor;
-		saturationDescriptor.depthBufferBits = 0;
-	}
-
 	private void Blit(CommandBuffer cmd, RenderTargetIdentifier target, Material material, int pass)
 	{
 		// For default processing _CameraOpaqueTexture.

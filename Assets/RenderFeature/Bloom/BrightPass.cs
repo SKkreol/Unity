@@ -10,6 +10,10 @@ public class BrightPass : ScriptableRenderPass
     private FilteringSettings _filteringSettings;
     private RenderStateBlock _renderStateBlock;
     
+#if UNITY_2022_1_OR_NEWER
+        private readonly static FieldInfo depthTextureFieldInfo = typeof(UniversalRenderer).GetField("m_DepthTexture", BindingFlags.NonPublic | BindingFlags.Instance);
+#endif
+    
     public BrightPass(RenderTargetHandle destination, int layerMask)
     {
         _destination = destination;
@@ -19,7 +23,7 @@ public class BrightPass : ScriptableRenderPass
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
-        var cmd = CommandBufferPool.Get("DDDD");
+        var cmd = CommandBufferPool.Get("EmissionPass");
         var sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
         var drawingSettings = CreateDrawingSettings(_shaderTagIdList, ref renderingData, sortingCriteria);
         cmd.GetTemporaryRT(_destination.id, renderingData.cameraData.cameraTargetDescriptor);
