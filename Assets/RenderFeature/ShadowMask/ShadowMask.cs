@@ -11,6 +11,7 @@ public class ShadowMask : MonoBehaviour
   {
     _rend = gameObject.GetComponent<Renderer>();
     _rend.realtimeLightmapIndex = 0;
+    // Static batching must be off.
     _rend.realtimeLightmapScaleOffset = shadowMask;
   }
 }

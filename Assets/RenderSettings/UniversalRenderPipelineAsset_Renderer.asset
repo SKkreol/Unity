@@ -13,6 +13,32 @@ MonoBehaviour:
   m_Name: CustomBlitFeature
   m_EditorClassIdentifier: 
   m_Active: 0
+--- !u!114 &-5224986058233727829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b63b0adea577a949a4372be478d2904, type: 3}
+  m_Name: ShadowMobileFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  textureSize: 1024
+  renderPassEvent: 250
+  blurSize: 0.9
+  fadeTexture: {fileID: 2800000, guid: f95d8b28f2c9946cca6f1702a5873ed0, type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  shadowColor: {r: 0.1956212, g: 0.23886862, b: 0.26415092, a: 0.85882354}
+  distance: 74
+  farPlane: 12
+  nearPlane: -0.1
+  drawMaterial: {fileID: 2100000, guid: 54861414adbd9fe41a97f1100fbb4279, type: 2}
+  blurMaterial: {fileID: 2100000, guid: 962dc809f5e0c6643aeca9a06598205b, type: 2}
 --- !u!114 &-2009492793078614248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,7 +77,8 @@ MonoBehaviour:
   - {fileID: -2009492793078614248}
   - {fileID: -7985530130319945644}
   - {fileID: 1562786356621339019}
-  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d918be93d4ee921b015
+  - {fileID: -5224986058233727829}
+  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d918be93d4ee921b015ab349cfadc1e7db7
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -104,10 +131,10 @@ MonoBehaviour:
   m_Active: 1
   debug: 0
   passEvent: 400
-  GlowLayers:
+  glowLayers:
     serializedVersion: 2
     m_Bits: 8
-  _renderTextureName: _BrightTex
+  renderTextureName: _BrightTex
   renderTarget: 1
   blurMaterial: {fileID: 2100000, guid: a497878ff23e0f147af64a8d8529fd21, type: 2}
   downsample: 3

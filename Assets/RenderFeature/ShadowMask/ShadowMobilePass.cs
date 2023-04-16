@@ -6,7 +6,7 @@ namespace RenderFeatures.RenderPasses
 {
   public class ShadowMobilePass : ScriptableRenderPass
   {
-    public RenderTargetHandle shadowHandle { get; set; }
+    public RenderTargetHandle ShadowHandle { get; set; }
     public float Distance;
     public LayerMask LayerMask;
 
@@ -24,7 +24,7 @@ namespace RenderFeatures.RenderPasses
     private readonly Vector3 _scale = new Vector3(1, 1, 1);
     private readonly Vector3[] _frustumToLightView = new Vector3[8];
 
-    private static readonly Matrix4x4 ShadowSpaceMatrix = new Matrix4x4()
+    private static readonly Matrix4x4 ShadowSpaceMatrix = new()
     {
       m00 = 0.5f, m01 = 0.0f, m02 = 0.0f, m03 = 0.5f,
       m10 = 0.0f, m11 = 0.5f, m12 = 0.0f, m13 = 0.5f,
@@ -50,8 +50,8 @@ namespace RenderFeatures.RenderPasses
       descriptor.depthBufferBits = 0;
       descriptor.width = Resolution;
       descriptor.height = Resolution;
-      cmd.GetTemporaryRT(shadowHandle.id, descriptor, FilterMode.Bilinear);
-      ConfigureTarget(shadowHandle.Identifier());
+      cmd.GetTemporaryRT(ShadowHandle.id, descriptor, FilterMode.Bilinear);
+      ConfigureTarget(ShadowHandle.Identifier());
       ConfigureClear(ClearFlag.All, Color.black);
     }
 
@@ -59,17 +59,17 @@ namespace RenderFeatures.RenderPasses
     {
       var cmd = CommandBufferPool.Get(ProfilerTag);
 
-      var projectionMatrix = Matrix4x4.identity;
+      var projMatrix = Matrix4x4.identity;
       var viewMatrix = Matrix4x4.identity;
 
-      CalculateViewProjectionShadowMatrix(renderingData, ref viewMatrix, ref projectionMatrix);
+      CalculateViewProjectionShadowMatrix(renderingData, ref viewMatrix, ref projMatrix);
 
-      cmd.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
+      cmd.SetViewProjectionMatrices(viewMatrix, projMatrix);
 
       // Set shadow camera parameter
       var sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
       var drawingSettings = CreateDrawingSettings(_mShaderTagId, ref renderingData, sortingCriteria);
-      var cullMatrix = ShadowSpaceMatrix * (projectionMatrix * viewMatrix);
+      var cullMatrix = ShadowSpaceMatrix * (projMatrix * viewMatrix);
       cmd.SetGlobalMatrix(ShadowMatrixId, cullMatrix);
       var cullResult = GetCulling(context, ref renderingData, ref cullMatrix);
       drawingSettings.perObjectData = PerObjectData.Lightmaps;
@@ -80,7 +80,7 @@ namespace RenderFeatures.RenderPasses
       _mFilteringSettings.layerMask = LayerMask;
       context.DrawRenderers(cullResult, ref drawingSettings, ref _mFilteringSettings, ref _renderState);
 
-      cmd.SetGlobalTexture(ShadowTextureId, shadowHandle.id);
+      cmd.SetGlobalTexture(ShadowTextureId, ShadowHandle.id);
       cmd.SetGlobalColor(ShadowColorId, ShadowColor);
 
       //Revert to normal view rendering
@@ -111,20 +111,21 @@ namespace RenderFeatures.RenderPasses
       var shadowLightIndex = renderingData.lightData.mainLightIndex;
       if (shadowLightIndex == -1)
         return;
+      
       var shadowLight = renderingData.lightData.visibleLights[shadowLightIndex];
-      var dirLight = shadowLight.light.transform;
+      var lightTransform = shadowLight.light.transform;
       var viewCamera = renderingData.cameraData.camera;
       var viewCameraTransform = viewCamera.transform;
 
       var aspect = viewCamera.aspect;
-      var halfFov = Mathf.Deg2Rad * viewCamera.fieldOfView * 0.5f;
+      var halfFovRadians = Mathf.Deg2Rad * viewCamera.fieldOfView * 0.5f;
       var nearDist = NearPlane;
       var farDist = FarPlane;
 
-      var hNear = Mathf.Tan(halfFov) * nearDist;
+      var hNear = Mathf.Tan(halfFovRadians) * nearDist;
       var wNear = hNear * aspect;
 
-      var hFar = Mathf.Tan(halfFov) * farDist;
+      var hFar = Mathf.Tan(halfFovRadians) * farDist;
       var wFar = hFar * aspect;
 
       var viewPos = viewCameraTransform.position;
@@ -151,10 +152,9 @@ namespace RenderFeatures.RenderPasses
       var bottomRightNear = centerNear - viewUpHNear + viewRightWNear;
       var bottomLeftNear = centerNear - viewUpHNear - viewRightWNear;
 
-      var frustumCenter = (centerFar - centerNear) * 0.5f;
-
-      var shadowCameraPos = frustumCenter - dirLight.forward * Distance;
-      view = Matrix4x4.TRS(shadowCameraPos, dirLight.rotation, _scale);
+      var frustumCenter = (centerFar + centerNear) * 0.5f;
+      var shadowCameraPos = frustumCenter - lightTransform.forward * Distance;
+      view = Matrix4x4.TRS(shadowCameraPos, lightTransform.rotation, Vector3.one);
       view = view.inverse;
 
       _frustumToLightView[0] = view.MultiplyPoint3x4(topLeftNear);
@@ -201,10 +201,10 @@ namespace RenderFeatures.RenderPasses
 
     public override void FrameCleanup(CommandBuffer cmd)
     {
-      if (shadowHandle != RenderTargetHandle.CameraTarget)
+      if (ShadowHandle != RenderTargetHandle.CameraTarget)
       {
-        cmd.ReleaseTemporaryRT(shadowHandle.id);
-        shadowHandle = RenderTargetHandle.CameraTarget;
+        cmd.ReleaseTemporaryRT(ShadowHandle.id);
+        ShadowHandle = RenderTargetHandle.CameraTarget;
       }
     }
   }

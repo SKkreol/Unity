@@ -46,7 +46,7 @@ namespace RenderFeatures
       if (drawMaterial == null || blurMaterial == null)
         return;
 
-      _shadowMobilePass.shadowHandle = _mobileShadowTexture;
+      _shadowMobilePass.ShadowHandle = _mobileShadowTexture;
       _shadowMobilePass.ShadowColor = shadowColor;
       _shadowMobilePass.Distance = distance;
       _shadowMobilePass.FarPlane = farPlane;
