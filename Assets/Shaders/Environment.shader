@@ -24,8 +24,10 @@ Shader "AlienProject/Environment"
             #pragma vertex Vertex
             #pragma fragment Fragment
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             
             #pragma multi_compile_fog
+            #pragma multi_compile _ LIGHTMAP_ON
 
             TEXTURE2D(_BlurShadow);
             SAMPLER(sampler_BlurShadow);      
@@ -45,6 +47,8 @@ Shader "AlienProject/Environment"
             {
                 float3 positionOS : POSITION;
                 half2 uv : TEXCOORD0;
+                half2 lightmapUV : TEXCOORD1;
+                half3 normal : NORMAL;
             };
 
             struct Varyings
@@ -53,6 +57,8 @@ Shader "AlienProject/Environment"
                 half2 uv : TEXCOORD0;
                 float2 shadowCoord : TEXCOORD1;
                 half fogFactor  : TEXCOORD2;
+                half2 lightmapUV  : TEXCOORD3;
+                half3 normalWS : NORMAL;
             };
 
             Varyings Vertex(Attributes i)
@@ -65,15 +71,24 @@ Shader "AlienProject/Environment"
 
                 o.positionCS = mul(UNITY_MATRIX_VP, float4(worldPos, 1.0));
                 o.fogFactor = ComputeFogFactor(o.positionCS.z);
+                o.normalWS = TransformObjectToWorldNormal(i.normal);
+                 OUTPUT_LIGHTMAP_UV(i.lightmapUV, unity_LightmapST, o.lightmapUV);
                 return o;
             }
 
             half4 Fragment(Varyings i) : SV_Target
             {
+                half NdL = saturate(dot(i.normalWS, _MainLightPosition.xyz));
+                
+                half3 bakedGI = SampleLightmap(i.lightmapUV, 0, i.normalWS);
+            
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv);
                 half4 shadowsSmooth = SAMPLE_TEXTURE2D(_BlurShadow, sampler_BlurShadow, i.shadowCoord);
-                half3 shadow = lerp(half(1), _MobileShadowColor.rgb, shadowsSmooth.r*_MobileShadowColor.a);
-                half3 color = shadow * albedo.rgb * _Color.rgb;
+                half shadowIntensity = shadowsSmooth.r*_MobileShadowColor.a * NdL * bakedGI;
+                half3 shadow = lerp(half(1), _MobileShadowColor.rgb, shadowIntensity);
+                
+
+                half3 color = shadow * albedo.rgb * _Color.rgb * bakedGI;
                 half3 colorFog = MixFog(color, i.fogFactor);
                 return half4(colorFog, 1);
             }

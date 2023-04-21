@@ -22,10 +22,10 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: d9c0dd5cdac07b145be73329e489869a, type: 3}
-        m_Scale: {x: 6, y: 6}
+        m_Scale: {x: 9, y: 9}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _Color: {r: 0.27058825, g: 0.65882355, b: 0.8784314, a: 1}
+    - _Color: {r: 0.5235451, g: 0.75021434, b: 0.8784314, a: 1}
   m_BuildTextureStacks: []

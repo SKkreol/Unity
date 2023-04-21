@@ -26,7 +26,7 @@ MonoBehaviour:
   m_Name: ShadowMobileFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  textureSize: 1024
+  textureSize: 512
   renderPassEvent: 250
   blurSize: 0.9
   fadeTexture: {fileID: 2800000, guid: f95d8b28f2c9946cca6f1702a5873ed0, type: 3}
@@ -35,8 +35,8 @@ MonoBehaviour:
     m_Bits: 8
   shadowColor: {r: 0.1956212, g: 0.23886862, b: 0.26415092, a: 0.85882354}
   distance: 74
-  farPlane: 12
-  nearPlane: -0.1
+  farPlane: 5
+  nearPlane: 0
   drawMaterial: {fileID: 2100000, guid: 54861414adbd9fe41a97f1100fbb4279, type: 2}
   blurMaterial: {fileID: 2100000, guid: 962dc809f5e0c6643aeca9a06598205b, type: 2}
 --- !u!114 &-2009492793078614248
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_AccurateGbufferNormals: 0
   m_ClusteredRendering: 0
   m_TileSize: 32
-  m_IntermediateTextureMode: 1
+  m_IntermediateTextureMode: 0
 --- !u!114 &1562786356621339019
 MonoBehaviour:
   m_ObjectHideFlags: 0
