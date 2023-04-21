@@ -35,6 +35,7 @@ Shader "ImprovedPBR"
             #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
             #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+            #pragma multi_compile_fog
 
             #pragma vertex LitPassVertex
             #pragma fragment LitPassFragment
@@ -70,6 +71,7 @@ Shader "ImprovedPBR"
                 half3 normalWS                 : TEXCOORD2;
                 half4 tangentWS                : TEXCOORD3;    // xyz: tangent, w: sign
                 float3 viewDirWS                : TEXCOORD4;
+                half fogFactor  : TEXCOORD5;
                 DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);           
                 float4 positionCS               : SV_POSITION;
             };
@@ -95,6 +97,7 @@ Shader "ImprovedPBR"
                 
                 output.positionWS = vertexInput.positionWS;
                 output.positionCS = vertexInput.positionCS;
+                output.fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
                 return output;
             }
             
@@ -282,7 +285,6 @@ Shader "ImprovedPBR"
 
                 half3 F0 = lerp(kDieletricSpec.rgb, albedo.rgb, metallic);
 
-
                 half perceptualRoughness = PerceptualSmoothnessToPerceptualRoughness(smoothness);
                 half roughness           = max(perceptualRoughness * perceptualRoughness, HALF_MIN_SQRT);
                 half roughness2          = max(roughness * roughness, HALF_MIN);
@@ -324,7 +326,8 @@ Shader "ImprovedPBR"
                 half3 mainLightColor = brdf * radiance;                       
                 half3 fColor = giColor + mainLightColor;
                 fColor = lerp(fColor, _EmissionColor.rgb, emissionMask.rrr);
-                return half4(fColor, 1);
+                half3 colorFog = MixFog(fColor, input.fogFactor);
+                return half4(colorFog, 1);
             }
 
             ENDHLSL
