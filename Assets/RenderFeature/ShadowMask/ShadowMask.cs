@@ -7,7 +7,7 @@ public class ShadowMask : MonoBehaviour
   private float4 shadowMask = float4.zero;
   private Renderer _rend;
 
-  void Awake()
+  private void Awake()
   {
     _rend = gameObject.GetComponent<Renderer>();
     _rend.realtimeLightmapIndex = 0;
