@@ -339,12 +339,12 @@ Shader "ImprovedPBR"
             Tags{"LightMode" = "DepthOnly"}
 
             ZWrite On
-            ColorMask 0
-            Cull[_Cull]
+            //ColorMask 0
+            Cull Back
 
             HLSLPROGRAM
-            #pragma exclude_renderers gles gles3 glcore
-            #pragma target 4.5
+            //#pragma exclude_renderers gles gles3 glcore
+            #pragma target 2.0
 
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment

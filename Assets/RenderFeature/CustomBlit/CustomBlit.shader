@@ -1,4 +1,4 @@
-Shader "Hidden/CustomBlit"
+Shader "AlienProject/CustomBlit"
 {
 	SubShader
 	{

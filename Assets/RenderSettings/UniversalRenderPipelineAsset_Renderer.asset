@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CustomBlitFeature
   m_EditorClassIdentifier: 
   m_Active: 0
+  material: {fileID: 2100000, guid: 363ef94d22bd1bd49bd79f3afe446033, type: 2}
 --- !u!114 &-5224986058233727829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,7 +28,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   textureSize: 512
-  renderPassEvent: 250
+  renderPassEvent: 300
   blurSize: 0.9
   fadeTexture: {fileID: 2800000, guid: f95d8b28f2c9946cca6f1702a5873ed0, type: 3}
   layerMask:
@@ -78,7 +79,8 @@ MonoBehaviour:
   - {fileID: -7985530130319945644}
   - {fileID: 1562786356621339019}
   - {fileID: -5224986058233727829}
-  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d918be93d4ee921b015ab349cfadc1e7db7
+  - {fileID: 6926113905350077008}
+  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d918be93d4ee921b015ab349cfadc1e7db750ea489ae67f1e60
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -171,3 +173,17 @@ MonoBehaviour:
   m_Active: 0
   texture: {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
   passEvent: 600
+--- !u!114 &6926113905350077008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5928c20e85783b04c88e5ed42a4db5e2, type: 3}
+  m_Name: ScanerFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  material: {fileID: 2100000, guid: 363ef94d22bd1bd49bd79f3afe446033, type: 2}

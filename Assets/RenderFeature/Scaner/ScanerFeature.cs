@@ -1,22 +1,15 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-class CustomBlitFeature : ScriptableRendererFeature
+class ScanerFeature : ScriptableRendererFeature
 {
 	[SerializeField]
 	private Material material;
-	private CustomBlitPass _renderPass = null;
+	private ScanerPass _renderPass = null;
 
 	public override void Create()
 	{
-		if (material == null)
-		{
-			var shader = Shader.Find("Hidden/CustomBlit");
-			if (shader == null)
-				return;
-			material = new Material(shader);
-		}
-		_renderPass = new CustomBlitPass(material);
+		_renderPass = new ScanerPass(material);
 	}
 	
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -25,7 +18,7 @@ class CustomBlitFeature : ScriptableRendererFeature
 			return;
 
 		_renderPass.ConfigureInput(ScriptableRenderPassInput.Color);
-		_renderPass.SetTarget(renderer.cameraColorTarget);
+		_renderPass.SetTarget(renderer.cameraColorTarget, renderingData.cameraData.camera);
 		renderer.EnqueuePass(_renderPass);
 	}
 }
