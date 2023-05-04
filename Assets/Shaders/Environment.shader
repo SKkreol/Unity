@@ -81,7 +81,6 @@ Shader "AlienProject/Environment"
                 half NdL = saturate(dot(i.normalWS, _MainLightPosition.xyz));
                 
                 half3 bakedGI = SampleLightmap(i.lightmapUV, 0, i.normalWS);
-            
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv);
                 half4 shadowsSmooth = SAMPLE_TEXTURE2D(_BlurShadow, sampler_BlurShadow, i.shadowCoord);
                 half shadowIntensity = shadowsSmooth.r*_MobileShadowColor.a * NdL * bakedGI;

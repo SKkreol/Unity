@@ -17,6 +17,8 @@ Shader "ImprovedPBR"
 
         _BumpScale("Scale", Float) = 1.0
         _BumpMap("Normal Map", 2D) = "bump" {}
+        
+        _ReceiveShadowMap("Receive shadow map", 2D) = "white" {}
     }
 
     SubShader
@@ -55,6 +57,7 @@ Shader "ImprovedPBR"
                             
             TEXTURE2D(_MRAO);       SAMPLER(sampler_MRAO); 
             TEXTURECUBE(_IrradianceMap);               SAMPLER(sampler_IrradianceMap);      
+            TEXTURE2D(_ReceiveShadowMap);               SAMPLER(sampler_ReceiveShadowMap);      
 
             struct Attributes
             {
@@ -263,6 +266,10 @@ Shader "ImprovedPBR"
             half4 LitPassFragment(Varyings input) : SV_Target
             {                                     
                 half3 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).rgb;
+                float2 uvShadow = (input.positionWS.xz - float2(4.15, 13.5))/75.0f + 0.5;
+                half4 receiveShadowMap = SAMPLE_TEXTURE2D(_ReceiveShadowMap, sampler_ReceiveShadowMap, uvShadow);
+                half receiveShadow = dot(receiveShadowMap.xyz, float3(0.3, 0.59, 0.11)) + 0.09;
+
                 albedo.rgb = albedo.rgb * _BaseColor.rgb;
                 half4 mrao = SAMPLE_TEXTURE2D(_MRAO, sampler_MRAO, input.uv);
                 half metallic = mrao.r;
@@ -324,7 +331,7 @@ Shader "ImprovedPBR"
                 half3 radiance = _MainLightColor.rgb * NdotL;
                 half3 brdf = brdfDiffuse + F0 * CookTorrance2(normalWS, half3(_MainLightPosition.xyz), viewDirWS, roughness2MinusOne, roughness2, normalizationTerm);                                   
                 half3 mainLightColor = brdf * radiance;                       
-                half3 fColor = giColor + mainLightColor;
+                half3 fColor = (giColor + mainLightColor ) * saturate(receiveShadow);
                 fColor = lerp(fColor, _EmissionColor.rgb, emissionMask.rrr);
                 half3 colorFog = MixFog(fColor, input.fogFactor);
                 return half4(colorFog, 1);
