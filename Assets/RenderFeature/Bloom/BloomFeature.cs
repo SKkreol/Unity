@@ -45,6 +45,8 @@ namespace RenderFeature.Bloom
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
+      if(!Application.isPlaying)
+        return;
       if (_material == null)
       {
         var shader = Shader.Find(ShaderName);

@@ -5,7 +5,7 @@ Shader "Hidden/AddBloom"
         Pass
         {
             Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline"}
-            Blend One One
+            Blend OneMinusDstColor One
             ZTest Always
             ZWrite Off
             HLSLPROGRAM
