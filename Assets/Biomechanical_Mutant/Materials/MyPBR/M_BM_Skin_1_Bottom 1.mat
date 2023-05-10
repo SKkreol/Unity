@@ -49,7 +49,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IrradianceMap:
-        m_Texture: {fileID: 8900000, guid: a90c4a8181532c443b283c73750bde4b, type: 3}
+        m_Texture: {fileID: 8900000, guid: 69bceb1b9bc31e44e8e522ad0827f90f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MRAO:

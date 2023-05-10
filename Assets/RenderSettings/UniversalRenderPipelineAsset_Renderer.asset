@@ -34,7 +34,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8
-  shadowColor: {r: 0.1956212, g: 0.23886862, b: 0.26415092, a: 0.85882354}
+  shadowColor: {r: 0.16263923, g: 0.22741364, b: 0.2627451, a: 1}
   distance: 74
   farPlane: 5
   nearPlane: 0
@@ -80,7 +80,8 @@ MonoBehaviour:
   - {fileID: 1562786356621339019}
   - {fileID: -5224986058233727829}
   - {fileID: 6926113905350077008}
-  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d918be93d4ee921b015ab349cfadc1e7db750ea489ae67f1e60
+  - {fileID: 6351243159525151592}
+  m_RendererFeatureMap: 9e25d735a47ea2521877d791f3d81ce454d019d7a7b22d918be93d4ee921b015ab349cfadc1e7db750ea489ae67f1e606853a0d500262458
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -173,6 +174,22 @@ MonoBehaviour:
   m_Active: 0
   texture: {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
   passEvent: 600
+--- !u!114 &6351243159525151592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fa08a6ae15bb6448e8cb4e223b02a4, type: 3}
+  m_Name: ReflectionRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 0
+  size: 0
+  ReflectionActive: 1
 --- !u!114 &6926113905350077008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,5 +202,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5928c20e85783b04c88e5ed42a4db5e2, type: 3}
   m_Name: ScanerFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   material: {fileID: 2100000, guid: 363ef94d22bd1bd49bd79f3afe446033, type: 2}
