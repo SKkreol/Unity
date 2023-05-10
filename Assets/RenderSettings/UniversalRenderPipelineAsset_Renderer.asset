@@ -34,7 +34,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8
-  shadowColor: {r: 0.16263923, g: 0.22741364, b: 0.2627451, a: 1}
+  shadowColor: {r: 0.16263923, g: 0.22741364, b: 0.2627451, a: 0.65882355}
   distance: 74
   farPlane: 5
   nearPlane: 0

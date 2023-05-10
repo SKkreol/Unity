@@ -441,8 +441,6 @@ Shader "ImprovedPBR"
             
             CBUFFER_START(UnityPerMaterial)
             CBUFFER_END  
-            
-            TEXTURE2D(_MRAO);       SAMPLER(sampler_MRAO); 
 
             struct Attributes
             {
@@ -453,7 +451,7 @@ Shader "ImprovedPBR"
             struct Varyings
             {
                 float2 uv                       : TEXCOORD0;      
-                float3 worldPos                       : TEXCOORD1;      
+                float3 worldPos                 : TEXCOORD1;      
                 float4 positionCS               : SV_POSITION;
             };
             
@@ -471,6 +469,7 @@ Shader "ImprovedPBR"
             half4 LitPassFragment(Varyings input) : SV_Target
             {                                     
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) *0.3;
+                // Hardcoded calculation mask, for blend static and realtime reflection.
                 albedo.a = half(1-saturate(input.worldPos.y/1.3 + 0.2));
                 return albedo;
             }

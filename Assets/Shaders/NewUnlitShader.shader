@@ -235,6 +235,44 @@ Shader "WetRoadsShader"
         }
         
         
+        half4 UniversalFragmentPBR2(InputData inputData, SurfaceData surfaceData)
+        {
+            bool specularHighlightsOff = false;
+
+            BRDFData brdfData;
+        
+            // NOTE: can modify "surfaceData"...
+            InitializeBRDFData(surfaceData, brdfData);
+        
+            // Clear-coat calculation...
+            BRDFData brdfDataClearCoat = CreateClearCoatBRDFData(surfaceData, brdfData);
+            half4 shadowMask = CalculateShadowMask(inputData);
+            AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
+            uint meshRenderingLayers = GetMeshRenderingLightLayer();
+            Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
+        
+            // NOTE: We don't apply AO to the GI here because it's done in the lighting calculation below...
+            MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);
+        
+            LightingData lightingData = CreateLightingData(inputData, surfaceData);
+        
+            lightingData.giColor = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
+                                                      inputData.bakedGI, aoFactor.indirectAmbientOcclusion, inputData.positionWS,
+                                                      inputData.normalWS, inputData.viewDirectionWS);
+        
+            if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
+            {
+                lightingData.mainLightColor = LightingPhysicallyBased(brdfData, brdfDataClearCoat,
+                                                                      mainLight,
+                                                                      inputData.normalWS, inputData.viewDirectionWS,
+                                                                      surfaceData.clearCoatMask, specularHighlightsOff);
+            }
+        
+            lightingData.vertexLightingColor = 0;
+        
+            return CalculateFinalColor(lightingData, surfaceData.alpha);
+        }
+        
         
         half4 frag(Varyings unpacked) : SV_TARGET
         {                  
@@ -323,8 +361,8 @@ Shader "WetRoadsShader"
             half2 reflection_uv = unpacked.reflectionUV.xy / unpacked.reflectionUV.w;
             half4 reflection = SAMPLE_TEXTURE2D(_ReflectionTex, sampler_ReflectionTex, reflection_uv);
                     
-            half4 color = UniversalFragmentPBR(inputData, surface) * shadow.rgbb;
-            color.rgb = lerp(color.rgb, reflection.rgb, reflection.a);
+            half4 color = UniversalFragmentPBR2(inputData, surface) * shadow.rgbb;
+            color.rgb = lerp(color.rgb, reflection.rgb, reflection.a*puddlesMask);
         
             color.rgb = MixFog(color.rgb, inputData.fogCoord);
             return color;
