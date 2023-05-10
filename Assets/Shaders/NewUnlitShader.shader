@@ -49,22 +49,16 @@ Shader "WetRoadsShader"
  
         HLSLPROGRAM
 
-        #pragma target 4.5
-        #pragma exclude_renderers gles gles3 glcore
-        #pragma multi_compile_instancing
+        #pragma target 2.0
+        //#pragma exclude_renderers gles gles3 glcore
         #pragma multi_compile_fog
-        #pragma instancing_options renderinglayer
-        #pragma multi_compile _ DOTS_INSTANCING_ON
         #pragma vertex vert
         #pragma fragment frag
 
         // Keywords
-        #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
         #pragma multi_compile _ LIGHTMAP_ON
         #pragma multi_compile _ DIRLIGHTMAP_COMBINED
         #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-        #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-        #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
         #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
         #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
         #pragma multi_compile_fragment _ _SHADOWS_SOFT
@@ -74,7 +68,6 @@ Shader "WetRoadsShader"
         #pragma multi_compile_fragment _ _LIGHT_LAYERS
         #pragma multi_compile_fragment _ DEBUG_DISPLAY
         #pragma multi_compile_fragment _ _LIGHT_COOKIES
-        #pragma multi_compile _ _CLUSTERED_RENDERING
         // GraphKeywords: <None>
         
         #define _NORMALMAP 1
