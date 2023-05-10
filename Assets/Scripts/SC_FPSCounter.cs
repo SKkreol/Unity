@@ -21,7 +21,7 @@ public class SC_FPSCounter : MonoBehaviour
     timeleft = updateInterval;
 
     textStyle.fontStyle = FontStyle.Bold;
-    textStyle.normal.textColor = Color.yellow;
+    
     textStyle.fontSize = 40;
   }
 
@@ -41,6 +41,14 @@ public class SC_FPSCounter : MonoBehaviour
       accum = 0.0f;
       frames = 0;
     }
+    if(fps > 50)
+      textStyle.normal.textColor = Color.green;
+    
+    if(fps > 30 && fps < 50)
+      textStyle.normal.textColor = Color.yellow;
+    
+    if(fps < 30)
+      textStyle.normal.textColor = Color.red;
   }
 
   void OnGUI()
