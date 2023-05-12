@@ -188,7 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   renderPassEvent: 0
-  size: 0
+  size: 1
   ReflectionActive: 1
 --- !u!114 &6926113905350077008
 MonoBehaviour:

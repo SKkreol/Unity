@@ -451,7 +451,7 @@ Shader "ImprovedPBR"
             struct Varyings
             {
                 float2 uv                       : TEXCOORD0;      
-                float3 worldPos                 : TEXCOORD1;      
+                float worldPos                 : TEXCOORD1;      
                 float4 positionCS               : SV_POSITION;
             };
             
@@ -460,7 +460,7 @@ Shader "ImprovedPBR"
                 Varyings output = (Varyings)0;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
                 output.uv = input.uv;
-                output.worldPos = vertexInput.positionWS;
+                output.worldPos = vertexInput.positionWS.y;
                 output.positionCS = vertexInput.positionCS;
                 return output;
             }
@@ -470,7 +470,7 @@ Shader "ImprovedPBR"
             {                                     
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) *0.3;
                 // Hardcoded calculation mask, for blend static and realtime reflection.
-                albedo.a = half(1-saturate(input.worldPos.y/1.3 + 0.2));
+                albedo.a = half(1-saturate(input.worldPos*0.7692));
                 return albedo;
             }
 

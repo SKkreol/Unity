@@ -168,6 +168,7 @@ Shader "WetRoadsShader"
             #endif
             
             float4 reflectionUV : TEXCOORD8;
+            float2 uvShadow : COLOR;
         };
         
         struct SurfaceDescription
@@ -223,7 +224,7 @@ Shader "WetRoadsShader"
             #endif
             
             output.reflectionUV = ComputeReflectionUV(output.positionCS);
-
+            output.uvShadow = mul(_MobileShadowMatrix, float4(positionWS,1)).xy;
             return output;
         }
         
@@ -270,27 +271,27 @@ Shader "WetRoadsShader"
         half4 frag(Varyings unpacked) : SV_TARGET
         {                  
             SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-            float2 uv = unpacked.texCoord0.xy * _Tile;
-            float4 albedo = SAMPLE_TEXTURE2D(_Albedo, sampler_Albedo, uv) * _Tint;
-            float2 worldUV = unpacked.positionWS.xz * _Variation_Tile.xx;
-            float4 variationMap = SAMPLE_TEXTURE2D(_Variation_Albedo, sampler_Variation_Albedo, worldUV);
-            float variationMask = variationMap.a;
-            float4 blendAlbedo = lerp(albedo, variationMap, variationMask.xxxx);
-            float4 wetAlbedo = blendAlbedo * _Puddles_Water_Color;
-            float2 puddlesUV = unpacked.positionWS.xz * _Puddles_Scale;
-            float4 puddlesMap = SAMPLE_TEXTURE2D(_Puddle, sampler_Puddle, puddlesUV);
-            float puddlesDepth = lerp(_Puddles_Water_Color[3] * 0.66, _Puddles_Water_Color[3], _Puddles_Depth * puddlesMap.a);
-            float puddlesMask = puddlesMap.r * puddlesDepth;
-            float4 finalColor = lerp(blendAlbedo, wetAlbedo, puddlesMask.xxxx);
-            float4 mainNormal = UnpackNormal(SAMPLE_TEXTURE2D(_Normal,sampler_Normal,uv)).xyzz;
-            float4 variationNormal = UnpackNormal(SAMPLE_TEXTURE2D(_Variation_Normal, sampler_Variation_Normal, worldUV)).xyzz;
-            float4 blendNormal = lerp(mainNormal, variationNormal, variationMask.xxxx);
-            float3 finalNormal = lerp(blendNormal.xyz, float3(0.0f, 0.0f, 1.0f), puddlesMap.xxx);
-            float4 mrao = SAMPLE_TEXTURE2D(_MRAO, sampler_MRAO, uv);
-            float smoothness = mrao.g * _Smoothness_Multiplier;
-            float _Lerp_b3a5b75c32c04d04a251eb6516ca9208_Out_3 = lerp(smoothness, _Variation_Smoothness, variationMask);
-            float _Lerp_6a60af84af884b5dbbb32fb98c7ac6ff_Out_3 = lerp(_Lerp_b3a5b75c32c04d04a251eb6516ca9208_Out_3, _Puddles_Wet_Surface_Smoothness, puddlesMap.g);
-            float _Lerp_fc739f31a04341d881ae43b4903e2ff0_Out_3 = lerp(_Lerp_6a60af84af884b5dbbb32fb98c7ac6ff_Out_3, 1, puddlesMap.r);
+            half2 uv = unpacked.texCoord0.xy * _Tile;
+            half4 albedo = SAMPLE_TEXTURE2D(_Albedo, sampler_Albedo, uv) * _Tint;
+            half2 worldUV = unpacked.positionWS.xz * _Variation_Tile.xx;
+            half4 variationMap = SAMPLE_TEXTURE2D(_Variation_Albedo, sampler_Variation_Albedo, worldUV);
+            half variationMask = variationMap.a;
+            half4 blendAlbedo = lerp(albedo, variationMap, variationMask.xxxx);
+            half4 wetAlbedo = blendAlbedo * _Puddles_Water_Color;
+            half2 puddlesUV = unpacked.positionWS.xz * _Puddles_Scale;
+            half4 puddlesMap = SAMPLE_TEXTURE2D(_Puddle, sampler_Puddle, puddlesUV);
+            half puddlesDepth = lerp(_Puddles_Water_Color[3] * 0.66, _Puddles_Water_Color[3], _Puddles_Depth * puddlesMap.a);
+            half puddlesMask = puddlesMap.r * puddlesDepth;
+            half4 finalColor = lerp(blendAlbedo, wetAlbedo, puddlesMask.xxxx);
+            half4 mainNormal = UnpackNormal(SAMPLE_TEXTURE2D(_Normal,sampler_Normal,uv)).xyzz;
+            half4 variationNormal = UnpackNormal(SAMPLE_TEXTURE2D(_Variation_Normal, sampler_Variation_Normal, worldUV)).xyzz;
+            half4 blendNormal = lerp(mainNormal, variationNormal, variationMask.xxxx);
+            half3 finalNormal = lerp(blendNormal.xyz, half3(0.0f, 0.0f, 1.0f), puddlesMap.xxx);
+            half4 mrao = SAMPLE_TEXTURE2D(_MRAO, sampler_MRAO, uv);
+            half smoothness = mrao.g * _Smoothness_Multiplier;
+            half _Lerp_b3a5b75c32c04d04a251eb6516ca9208_Out_3 = lerp(smoothness, _Variation_Smoothness, variationMask);
+            half _Lerp_6a60af84af884b5dbbb32fb98c7ac6ff_Out_3 = lerp(_Lerp_b3a5b75c32c04d04a251eb6516ca9208_Out_3, _Puddles_Wet_Surface_Smoothness, puddlesMap.g);
+            half _Lerp_fc739f31a04341d881ae43b4903e2ff0_Out_3 = lerp(_Lerp_6a60af84af884b5dbbb32fb98c7ac6ff_Out_3, 1, puddlesMap.r);
             
             surfaceDescription.NormalTS = finalNormal;
 
@@ -330,8 +331,8 @@ Shader "WetRoadsShader"
 
             inputData.bakedGI = SAMPLE_GI(unpacked.staticLightmapUV, float3(0,0,0), inputData.normalWS);
         
-            inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(unpacked.positionCS);
-            inputData.shadowMask = SAMPLE_SHADOWMASK(unpacked.staticLightmapUV);
+            inputData.normalizedScreenSpaceUV = 0;
+            inputData.shadowMask = 0;
              
             SurfaceData surface;
             surface.albedo              = finalColor.xyz;
@@ -345,9 +346,7 @@ Shader "WetRoadsShader"
             surface.clearCoatMask       = 0;
             surface.clearCoatSmoothness = 1;
             
-            float2 uvShadow = mul(_MobileShadowMatrix, float4(inputData.positionWS,1)).xy;
-            
-            half4 shadowsSmooth = SAMPLE_TEXTURE2D(_BlurShadow, sampler_BlurShadow, uvShadow);
+            half4 shadowsSmooth = SAMPLE_TEXTURE2D(_BlurShadow, sampler_BlurShadow, unpacked.uvShadow);
             half shadowIntensity = shadowsSmooth.r * _MobileShadowColor.a;
             half3 shadow = lerp(half(1), _MobileShadowColor.rgb, shadowIntensity);    
         
