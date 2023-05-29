@@ -60,8 +60,8 @@ Shader "ImprovedPBR"
             struct Attributes
             {
                 float3 positionOS   : POSITION;
-                float3 normalOS     : NORMAL;
-                float4 tangentOS    : TANGENT;
+                half3 normalOS     : NORMAL;
+                half4 tangentOS    : TANGENT;
                 half2 uv            : TEXCOORD0;
             };
             
@@ -70,9 +70,8 @@ Shader "ImprovedPBR"
                 half2 uv                        : TEXCOORD0;
                 float3 positionWS               : TEXCOORD1;
                 half3 normalWS                  : TEXCOORD2;
-                half4 tangentWS                 : TEXCOORD3;
+                half3 tangentWS                 : TEXCOORD3;
                 half3 biTangentWS               : TEXCOORD6;
-                float3 viewDirWS                : TEXCOORD4;
                 half fogFactor                  : TEXCOORD5;     
                 float4 positionCS               : SV_POSITION;
             };
@@ -80,17 +79,17 @@ Shader "ImprovedPBR"
             Varyings LitPassVertex(Attributes input)
             {
                 Varyings output = (Varyings)0;
-                VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);       
+    
                 output.uv = input.uv;
-                output.normalWS = normalInput.normalWS;
+                output.normalWS = normalize(mul(input.normalOS, (float3x3)GetWorldToObjectMatrix()));
                 half sign = input.tangentOS.w * GetOddNegativeScale();
-                half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
+                half3 tangentWS = normalize(mul(input.tangentOS.xyz, (float3x3)GetWorldToObjectMatrix()));
 
                 output.tangentWS = tangentWS;  
                 
                 half3 bitangent = sign * cross(output.normalWS, tangentWS);    
                 output.biTangentWS = bitangent;          
-                output.positionWS = mul(UNITY_MATRIX_M, float4(input.positionOS, 1));
+                output.positionWS = mul(UNITY_MATRIX_M, float4(input.positionOS, 1)).xyz;
                 output.positionCS = mul(UNITY_MATRIX_VP, float4(output.positionWS, 1));
                 output.fogFactor = ComputeFogFactor(output.positionCS.z);
                 return output;
