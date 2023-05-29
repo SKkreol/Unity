@@ -11,7 +11,6 @@ Shader "ImprovedPBR"
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
 
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
-        _Mix("Mix", Range(0.0, 1.0)) = 0.0
 
         [ToggleOff] _EnvironmentReflections("Environment Reflections", Float) = 1.0
 
@@ -52,7 +51,6 @@ Shader "ImprovedPBR"
                 half _Smoothness;
                 half _Metallic;
                 half _BumpScale;
-                half _Mix;
             CBUFFER_END
                             
             TEXTURE2D(_MRAO);       SAMPLER(sampler_MRAO); 
@@ -61,46 +59,40 @@ Shader "ImprovedPBR"
 
             struct Attributes
             {
-                float4 positionOS   : POSITION;
+                float3 positionOS   : POSITION;
                 float3 normalOS     : NORMAL;
                 float4 tangentOS    : TANGENT;
-                float2 uv     : TEXCOORD0;
+                half2 uv            : TEXCOORD0;
             };
             
             struct Varyings
             {
-                float2 uv                       : TEXCOORD0;
+                half2 uv                        : TEXCOORD0;
                 float3 positionWS               : TEXCOORD1;
-                half3 normalWS                 : TEXCOORD2;
-                half4 tangentWS                : TEXCOORD3;    // xyz: tangent, w: sign
+                half3 normalWS                  : TEXCOORD2;
+                half4 tangentWS                 : TEXCOORD3;
+                half3 biTangentWS               : TEXCOORD6;
                 float3 viewDirWS                : TEXCOORD4;
-                half fogFactor  : TEXCOORD5;
-                DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);           
+                half fogFactor                  : TEXCOORD5;     
                 float4 positionCS               : SV_POSITION;
             };
             
             Varyings LitPassVertex(Attributes input)
             {
                 Varyings output = (Varyings)0;
-                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-            
-                // normalWS and tangentWS already normalize.
-                // this is required to avoid skewing the direction during interpolation
-                // also required for per-vertex lighting and SH evaluation
                 VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);       
                 output.uv = input.uv;
-            
-                // already normalized from normal transform to WS.
                 output.normalWS = normalInput.normalWS;
-                real sign = input.tangentOS.w * GetOddNegativeScale();
+                half sign = input.tangentOS.w * GetOddNegativeScale();
                 half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
-                output.tangentWS = tangentWS;
-            
-                OUTPUT_LIGHTMAP_UV(input.uv, unity_LightmapST, output.staticLightmapUV);
+
+                output.tangentWS = tangentWS;  
                 
-                output.positionWS = vertexInput.positionWS;
-                output.positionCS = vertexInput.positionCS;
-                output.fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                half3 bitangent = sign * cross(output.normalWS, tangentWS);    
+                output.biTangentWS = bitangent;          
+                output.positionWS = mul(UNITY_MATRIX_M, float4(input.positionOS, 1));
+                output.positionCS = mul(UNITY_MATRIX_VP, float4(output.positionWS, 1));
+                output.fogFactor = ComputeFogFactor(output.positionCS.z);
                 return output;
             }
             
@@ -266,9 +258,9 @@ Shader "ImprovedPBR"
             half4 LitPassFragment(Varyings input) : SV_Target
             {                                     
                 half3 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).rgb;
-                float2 uvShadow = (input.positionWS.xz - float2(4.15, 13.5))/75.0f + 0.5;
-                half4 receiveShadowMap = SAMPLE_TEXTURE2D(_ReceiveShadowMap, sampler_ReceiveShadowMap, uvShadow);
-                half receiveShadow = dot(receiveShadowMap.xyz, float3(0.3, 0.59, 0.11)) + 0.25;
+//                 float2 uvShadow = (input.positionWS.xz - float2(4.15, 13.5))/75.0f + 0.5;
+//                 half4 receiveShadowMap = SAMPLE_TEXTURE2D(_ReceiveShadowMap, sampler_ReceiveShadowMap, uvShadow);
+//                 half receiveShadow = dot(receiveShadowMap.xyz, float3(0.3, 0.59, 0.11)) + 0.25;
 
                 albedo.rgb = albedo.rgb * _BaseColor.rgb;
                 half4 mrao = SAMPLE_TEXTURE2D(_MRAO, sampler_MRAO, input.uv);
@@ -279,9 +271,7 @@ Shader "ImprovedPBR"
                 half3 normalTS = SampleNormal(input.uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap), _BumpScale);
 
                 half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
-                half sgn = input.tangentWS.w;      // should be either +1 or -1
-                half3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
-                half3x3 TBN = half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz);               
+                half3x3 TBN = half3x3(input.tangentWS.xyz, input.biTangentWS.xyz, input.normalWS.xyz);               
                 half3 normals = TransformTangentToWorld(normalTS, TBN);
                 half3 normalWS = NormalizeNormalPerPixel(normals);
                 half3 bakedGI = SampleSH2(normalWS);
@@ -332,7 +322,7 @@ Shader "ImprovedPBR"
                 half3 radiance = _MainLightColor.rgb * NdotL;
                 half3 brdf = brdfDiffuse + F0 * CookTorrance2(normalWS, half3(_MainLightPosition.xyz), viewDirWS, roughness2MinusOne, roughness2, normalizationTerm);                                   
                 half3 mainLightColor = brdf * radiance;                       
-                half3 fColor = (giColor + mainLightColor ) * saturate(receiveShadow);
+                half3 fColor = (giColor + mainLightColor );
                 fColor = lerp(fColor, _EmissionColor.rgb, emissionMask.rrr);
                 half3 colorFog = MixFog(fColor, input.fogFactor);
                 return half4(colorFog, 1);
