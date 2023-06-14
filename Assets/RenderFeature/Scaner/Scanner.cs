@@ -3,6 +3,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Scanner : MonoBehaviour
 {
+    public Cubemap fog;
     private Matrix4x4 _projectionMatrix;
     private static readonly int ViewToWorldMatrixID = Shader.PropertyToID("VW_MATRIX");
     private static readonly int InverseProjectionMatrixID = Shader.PropertyToID("P_MATRIX");
@@ -27,6 +28,8 @@ public class Scanner : MonoBehaviour
     private bool _scan;
     private static readonly int ScanerSize = Shader.PropertyToID("_ScanerSize");
     private static readonly int ScanWidth = Shader.PropertyToID("_ScanWidth");
+    private static readonly int LutTex = Shader.PropertyToID("_LutTex");
+    private static readonly int FogMap = Shader.PropertyToID("_FogMap");
 
     [ContextMenu("Scan")]
     public void Scan()
@@ -37,6 +40,7 @@ public class Scanner : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
+        Shader.SetGlobalTexture(FogMap, fog);
     }
     
     private Texture2D LutTexture(Gradient gradient, ref Texture2D texture)
@@ -67,7 +71,7 @@ public class Scanner : MonoBehaviour
     {
             LutTexture(_gradient, ref lutTex);
 
-        Shader.SetGlobalTexture("_LutTex", lutTex);
+        Shader.SetGlobalTexture(LutTex, lutTex);
         // _projectionMatrix = GL.GetGPUProjectionMatrix(_cameraMain.projectionMatrix, false);
         // Shader.SetGlobalMatrix(InverseProjectionMatrixID, _projectionMatrix.inverse);
         // Shader.SetGlobalMatrix(ViewToWorldMatrixID, _cameraMain.cameraToWorldMatrix);
@@ -82,7 +86,7 @@ public class Scanner : MonoBehaviour
             var e = _curve.Evaluate(t);
 
             var w = Mathf.Lerp(0.5f, 20.5f, t);
-        
+
             Shader.SetGlobalFloat(ScanerSize, e*scanDistance);
             Shader.SetGlobalFloat(ScanWidth, w);
         //}

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 876ea292618ca364ebad6f0dd565db58
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _Mask: {instanceID: 0}
+  - _Normal: {instanceID: 0}
+  - _Environment: {instanceID: 0}
+  - _Interior2DAtlas: {instanceID: 0}
+  - _InteriorCubemapArray: {instanceID: 0}
+  - _Dirt: {instanceID: 0}
+  - _Crack: {instanceID: 0}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a701bcdf3720bc6458be73e0472dab73, type: 3}
+  m_Name: Data0
+  m_EditorClassIdentifier: 
+  WallMaterial: {fileID: 2100000, guid: aba0c5af60e940c46a31ac1a85abd94c, type: 2}
+  Foundation:
+    FacadeData:
+    - LeftCorner:
+        Prefab: {fileID: 2722685707111089511, guid: d7edd6cdefc5bc846b32c2a90de4f5b5,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      RightCorner:
+        Prefab: {fileID: 0}
+        FlatPrefab: {fileID: 0}
+      Windows:
+      - Window:
+          Prefab: {fileID: 3072782350594810744, guid: edb2f5a0dbbb6f04682ab02d6536609d,
+            type: 3}
+          FlatPrefab: {fileID: 0}
+        RepeatWindowCount: 1
+    BlankData:
+      LeftCorner:
+        Prefab: {fileID: 2722685707111089511, guid: d7edd6cdefc5bc846b32c2a90de4f5b5,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      Tile:
+        Prefab: {fileID: 8549535075423808308, guid: e83d4b30dc5e8d64884379dab93403c6,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+  Facade:
+    FirstFloorData:
+      LeftCorner:
+        Prefab: {fileID: 2130385817158834775, guid: 0cd0de81adcb1ce4eb0c99bec35bfc84,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      RightCorner:
+        Prefab: {fileID: 2130385817158834775, guid: 8008b32eb0ae5ed4182e79d348c80df9,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      Door:
+        Prefab: {fileID: 1871509555499309701, guid: ce7ab26403e225e45afb52342a149b3e,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      Window:
+        Prefab: {fileID: 2710354633066221045, guid: 1647736b62e7441438d5dfccc02e90f0,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      LeftCornerBorder:
+        Prefab: {fileID: 1066813186983227874, guid: beb4899554ad6e945a64fd26d8bfc348,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      RightCornerBorder:
+        Prefab: {fileID: 1066813186983227874, guid: 14fd40a4a6dc10d4ba9b9e94dc397217,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      Border:
+        Prefab: {fileID: 1281462475704284083, guid: d36a3a467615c0a4aa4adceaf1183408,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+    UpperFloorsData:
+    - LeftCorner:
+        Prefab: {fileID: 4968442617812987772, guid: 287516742f0af3845b27dfc6a22f7229,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      RightCorner:
+        Prefab: {fileID: 4968442617812987772, guid: 3129c7f9e23c9bf43a23972d0fc286f2,
+          type: 3}
+        FlatPrefab: {fileID: 0}
+      Windows:
+      - Window:
+          Prefab: {fileID: 7696980119238459385, guid: 67850268101b9914a810570800ba50e1,
+            type: 3}
+          FlatPrefab: {fileID: 0}
+        RepeatWindowCount: 1
+      - Window:
+          Prefab: {fileID: 8549535075423808308, guid: e83d4b30dc5e8d64884379dab93403c6,
+            type: 3}
+          FlatPrefab: {fileID: 0}
+        RepeatWindowCount: 1
+  BlankWall:
+    LowBorder:
+      Prefab: {fileID: 6287569067303338355, guid: f8c43545189ee0244ad673d34c978a91,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+    LowCornerLeft:
+      Prefab: {fileID: 2130385817158834775, guid: 0cd0de81adcb1ce4eb0c99bec35bfc84,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+    LowCornerRight:
+      Prefab: {fileID: 0}
+      FlatPrefab: {fileID: 0}
+    UpperBorder:
+      Prefab: {fileID: 3407099851006890219, guid: c5480c3e5e1be7749920f8bd5ad136d8,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+    UpperCornerLeft:
+      Prefab: {fileID: 1066813186983227874, guid: beb4899554ad6e945a64fd26d8bfc348,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+    UpperCornerRight:
+      Prefab: {fileID: 0}
+      FlatPrefab: {fileID: 0}
+    Wall:
+      Prefab: {fileID: 8549535075423808308, guid: e83d4b30dc5e8d64884379dab93403c6,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+  Roof:
+    Corner:
+      Prefab: {fileID: 4665841147908271909, guid: d1796c7b252fd604da164763582f4d71,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+    Border:
+      Prefab: {fileID: 3236751484130526735, guid: b0727394e99d64245aa409969c3267ea,
+        type: 3}
+      FlatPrefab: {fileID: 0}
+    Material: {fileID: 2100000, guid: 76e1662c3df95c44da762f2ae8514dce, type: 2}

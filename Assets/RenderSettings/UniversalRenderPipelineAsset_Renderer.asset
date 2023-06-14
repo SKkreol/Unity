@@ -34,7 +34,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8
-  shadowColor: {r: 0.16263923, g: 0.22741364, b: 0.2627451, a: 0.65882355}
+  shadowColor: {r: 0.1, g: 0.1977272, b: 0.3, a: 1}
   distance: 74
   farPlane: 5
   nearPlane: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   renderTextureName: _BrightTex
   renderTarget: 1
   blurMaterial: {fileID: 2100000, guid: a497878ff23e0f147af64a8d8529fd21, type: 2}
-  downsample: 3
+  downsample: 2
   globalTextureName: _BlurTexture
 --- !u!114 &5510697784215195006
 MonoBehaviour:
@@ -186,9 +186,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24fa08a6ae15bb6448e8cb4e223b02a4, type: 3}
   m_Name: ReflectionRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   renderPassEvent: 0
-  size: 1
+  size: 2
   ReflectionActive: 1
 --- !u!114 &6926113905350077008
 MonoBehaviour:
